@@ -1,0 +1,4 @@
+--CASE STUDY FOR SQL with several new comeing insides
+--show table
+select * 
+from credit_cards;
