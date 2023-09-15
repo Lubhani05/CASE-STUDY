@@ -1,0 +1,2 @@
+--1.What is the total amount spent by everyone? 
+select sum(amount) AS "total Amount" from credit_cards;
