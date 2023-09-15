@@ -1,0 +1,5 @@
+--3.The card type “Platinum” was used for which “Exp Type” the most?
+SELECT "exp date",count(*) from credit_cards
+where "card type" in('Platinum')
+group by "exp type" 
+order by "exp type" desc
