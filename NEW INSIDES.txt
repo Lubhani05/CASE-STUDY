@@ -1,0 +1,86 @@
+--come up with your incides
+
+--1)find the average amount for each card type in Augest and september
+select "card type",avg(Amount),substr(Date,instr(Date, '-')+1,3) AS month,
+substr(Date,instr(Date, '-')+5,4) AS year
+FROM credit_cards
+where month in('Aug','Sep')
+GROUP by "card type",month,year
+order by month,year
+
+
+/* over here we have used substring function (extracts some characters) and instr (position of the first occurrence ) to 
+find month and year in date.
+then average amount 
+group by card-type and month,year */
+
+
+
+--2)which card is used by female in may month having more then average expenditure 
+select "card type" from
+(select "card type" , count(*) ,
+ rank() over(order by count(*) desc)as rnk from credit_cards
+where amount>(select avg(amount) from credit_cards)
+and gender in('F') 
+and 
+  substr(Date,instr(Date, '-')+1,3) ='May'
+group by "card type"
+order by count(*) desc)
+as xd
+where rnk=1
+
+/*used subquerry to form table as xd
+and rank()over(order by count(*)) means to to rank every count and order by card type.
+*/
+
+--3)make clone for credit_cards table (only schema)
+CREATE TABLE credit_cards_clone AS SELECT * FROM credit_cards WHERE 1=2;
+select * from credit_cards_clone;
+
+/* to make clone function in this table where we define 1=2 which means to print data where 1 row 
+is same as 2 row , but no such entry found over here.*/
+
+--show the number of card in each exp type with Platnium,gold,silver,Signature and 
+--another column show total number of count for cards
+SELECT "exp type",
+sum( case WHEN "card type" = 'Gold' THEN 1 else 0 end) as Gold_card,
+sum(case WHEN "card type" = 'Platinum' THEN 1 else 0 end) as Platinum_card,
+ sum(case WHEN "card type" = 'Silver' THEN 1 else 0 end) AS Silver_card,
+ sum(case WHEN "card type" = 'Signature' THEN 1 else 0 end) As Signature_card,
+ count(*) as total_cards
+  FROM credit_cards
+  group by "exp type"
+  order by "exp type"
+
+  /*Over here used case statement to make pivoting in the table which going to show the amount on each card spend 
+   by the exp type and also about the total for each exp type.*/
+  
+  --find percentage which gender used the maximum card (cte)
+ WITH GenderCardCounts AS (
+    SELECT gender, COUNT(*) AS card_count
+    FROM credit_cards
+    GROUP BY gender
+)
+SELECT 
+    gender,
+    card_count,
+  round((card_count * 100.0 / SUM(card_count) OVER ()),1)||'%' AS percentage
+FROM GenderCardCounts
+ORDER BY card_count DESC
+LIMIT 1;
+
+/*using cte find the percentage in which outer querry is telling about the percentage 
+and used window function to sum the total count of 'M' and 'F' present in the table and calculate percentage.
+inner querry=count the people by gender as 'F' and 'M' and order by card_count which is increasing order */
+
+--finding null values from table 
+select * from credit_cards
+where "card type" ISNULL 
+
+/*TO FIND NULL VALUES WE USE ISNULL WE CAN APPLY ON TO DIFFERENT COLUMN AS PER REQUIREDMENT*/
+
+  
+
+
+
+
