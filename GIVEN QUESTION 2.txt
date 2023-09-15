@@ -1,0 +1,25 @@
+--2. Which city has the:
+--2.1 Highest total expenditure
+select city, sum(amount) as total from credit_cards
+GROUP by city
+order by  total desc
+Limit 1
+
+--2.2 Lowest total expenditure
+select city, sum(amount) as total_lowest from credit_cards
+group by city
+order by total_lowest
+LIMIT 1
+
+--2.3 Highest average expenditure
+select city,avg(amount) as average_expenditure
+from credit_cards
+group by city 
+order by city desc
+LIMIT 1
+--2.4 Lowest average expenditure
+select city,avg(amount) as average_expenditure
+from credit_cards
+group by city 
+order by city asc
+LIMIT 1	
